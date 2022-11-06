@@ -8,10 +8,6 @@ module.exports = {
       colors: {
         gradientFrom: '#09203F',
         gradientTo: '#537895'
-      },
-      fontFamily: {
-        body: ['"Open Sans"'],
-        momo: ['ui-monospace']
       }
     },
     screens: {
@@ -23,6 +19,9 @@ module.exports = {
       ssm: ['12px', '16px'],
       msm: ['13px', '17px'],
       ...defaultTheme.fontSize
+    },
+    fontFamily: {
+      chakra: ['Chakra Petch', 'sans-serif']
     }
   },
   plugins: []
