@@ -1,25 +1,60 @@
+import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import React, { useState } from 'react';
+import { Link } from 'react-scroll';
 import { VSCIcon } from '../../assets/icons/icons';
 import { responsive } from '../../constant/responsive';
+import { globalStyle } from '../../constant/style';
 
 const style = {
   viewStyle: `${responsive.paddingX} h-auto flex justify-between py-3`,
   listStyle: `${responsive.hidden} flex flex-row my-auto`,
-  listItemStyle: `${responsive.textHeading} text-slate-300 flex mx-5 hover:text-slate-100 hover:cursor-pointer duration-500`,
+  listItemStyle: `${responsive.textHeading} text-slate-300 flex mx-5 hover:text-slate-100 hover:cursor-pointer hover:scale-110 duration-500 duration-500`,
+  responsiveListItemStyle: `${responsive.responsiveNavItem} text-slate-300 flex my-6 cursor-pointer`,
   iconStyle: 'text-slate-100 text-3xl font-italic',
   contactStyle: 'mt-auto',
   hambugerMenu: 'md:hidden'
 };
-const ListNavbar = (props: { responsive: boolean }) => {
+const ListNavbar = (props: { responsive: boolean; callBack?: any }) => {
   const { responsive } = props;
+  const listItemStyle = !responsive ? style.listItemStyle : style.responsiveListItemStyle;
   return (
     <React.Fragment>
-      <ul className={!responsive ? style.listStyle : 'items-right'}>
-        <li className={style.listItemStyle}>Home</li>
-        <li className={style.listItemStyle}>Services</li>
-        <li className={style.listItemStyle}>Experience</li>
-        <li className={style.listItemStyle}>Education</li>
-        <li className={style.listItemStyle}>Cetificates</li>
+      <ul
+        className={
+          !responsive
+            ? style.listStyle
+            : 'flex flex-col justify-center items-center w-full h-screen'
+        }>
+        <li className={listItemStyle}>
+          <Link to="home" spy={true} smooth={true} onClick={props.callBack}>
+            Home
+          </Link>
+        </li>
+        <li className={listItemStyle}>
+          <Link to="about" spy={true} smooth={true} onClick={props.callBack}>
+            About
+          </Link>
+        </li>
+        <li className={listItemStyle}>
+          <Link to="skill" spy={true} smooth={true} onClick={props.callBack}>
+            Skill
+          </Link>
+        </li>
+        <li className={listItemStyle}>
+          <Link to="experience" spy={true} smooth={true} onClick={props.callBack}>
+            Experience
+          </Link>
+        </li>
+        <li className={listItemStyle}>
+          <Link to="aducation" spy={true} smooth={true} onClick={props.callBack}>
+            Education
+          </Link>
+        </li>
+        <li className={listItemStyle}>
+          <Link to="cetificates" spy={true} smooth={true} onClick={props.callBack}>
+            Cetificates
+          </Link>
+        </li>
       </ul>
     </React.Fragment>
   );
@@ -27,11 +62,24 @@ const ListNavbar = (props: { responsive: boolean }) => {
 
 export const Navbar = () => {
   const [closeButtonVisible, setCloseButtonVisible] = useState(false);
+  const [bgNavStyleOnScroll, setBgNavStyleOnScroll] = useState('bg-transparent');
+  useScrollPosition(
+    ({ prevPos, currPos }) => {
+      if (currPos.y < -25 && bgNavStyleOnScroll === 'bg-transparent') {
+        setBgNavStyleOnScroll('bg-black-500');
+      } else if (currPos.y === 0) {
+        setBgNavStyleOnScroll('bg-transparent');
+        prevPos;
+      }
+    },
+    [bgNavStyleOnScroll]
+  );
+
   const renderMenuButton = () => {
     return (
       <button
         type="button"
-        className={responsive.hiddenMd}
+        className={`${responsive.hiddenMd} z-50`}
         onClick={() => {
           setCloseButtonVisible((prevState) => !prevState);
         }}>
@@ -40,20 +88,20 @@ export const Navbar = () => {
       </button>
     );
   };
+
   return (
-    <div className={responsive.sticky}>
+    <div
+      className={`${responsive.sticky} ${bgNavStyleOnScroll} transition-colors duration-500 ease-in-out`}>
       <nav className={style.viewStyle}>
-        <p className={style.iconStyle}>Thomas</p>
+        <p className={style.iconStyle}>{!closeButtonVisible ? 'Thomas' : ''}</p>
         <ListNavbar responsive={false} />
         {renderMenuButton()}
       </nav>
       <div
         className={`${responsive.hiddenMd} ${responsive.paddingX} ${
           !closeButtonVisible ? 'hidden' : ''
-        } absolute right-0 rounded-lg`}>
-        <div className="rounded-lg border border-gray-700 bg-slate-800">
-          <ListNavbar responsive={true} />
-        </div>
+        } absolute top-0 left-0 h-auto min-h-full w-full ${globalStyle.bgColor}`}>
+        <ListNavbar responsive={true} callBack={() => setCloseButtonVisible(false)} />
       </div>
     </div>
   );

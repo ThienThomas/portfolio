@@ -1,4 +1,3 @@
-export const Card = (props: any) => {
-  const divStyle = 'bg-white shadow-lg shadow-blue-600/50 rounded-md p-5';
-  return <div className={divStyle}>{props.children}</div>;
+export const Card = (props: { divStyle: string; children: any }) => {
+  return <div className={props.divStyle}>{props.children}</div>;
 };
